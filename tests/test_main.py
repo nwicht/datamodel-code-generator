@@ -2027,6 +2027,31 @@ def test_space_and_special_characters_dict():
             ).read_text()
         )
 
+@freeze_time('2019-07-26')
+def test_main_require_referenced_field():
+    with TemporaryDirectory() as output_dir:
+        output_dir: Path = Path(output_dir)
+        return_code: Exit = main(
+            [
+                '--input',
+                str(),
+                '--output',
+                str(output_dir),
+                '--input-file-type',
+                'json_schema',
+            ]
+        )
+        assert return_code == Exit.OK
+        assert (
+            output_dir / ("referenced.json").read_text()
+            == (EXPECTED_MAIN_PATH / 'required_referenced_field' / 'referenced.py').read_text()
+        )
+        assert (
+            output_dir / ("required.json").read_text()
+            == (EXPECTED_MAIN_PATH / 'required_referenced_field' / 'required.py').read_text()
+        )
+
+
 
 @freeze_time('2019-07-26')
 def test_csv_file():
